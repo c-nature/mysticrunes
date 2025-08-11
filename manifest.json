@@ -1,0 +1,19 @@
+{
+  "name": "Mythic Runes",
+  "short_name": "Mythic Runes",
+  "description": "A Norse mythology-themed word finding game",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1d3557",
+  "theme_color": "#1d3557",
+  "icons": [
+    {
+      "src": "rune.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["games", "education"],
+  "lang": "en",
+  "orientation": "portrait-primary"
+}
