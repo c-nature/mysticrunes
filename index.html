@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
     <style>
-        /* * NOTE: This game requires a custom font file, background images, and sound files.
-         * Make sure 'Ludlow Strong Ale.ttf', boss background images (e.g., 'draugr-bg.png'), and boss sound files (e.g., 'draugr.wav') are in the same folder as this HTML file.
+        /* This game requires external files, but these are provided as fallbacks if unavailable.
+         * 'Ludlow Strong Ale.ttf', boss background images (e.g., 'draugr-bg.png'), and boss sound files (e.g., 'draugr.wav')
          */
         @font-face {
             font-family: 'Ludlow Strong Ale';
@@ -59,7 +59,7 @@
             font-size: 1.8em;
             font-weight: 700;
             margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .character-selection {
@@ -78,7 +78,7 @@
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .character-card img {
@@ -100,7 +100,7 @@
 
         .character-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
             background-color: #a8dadc;
         }
 
@@ -134,7 +134,7 @@
             background-size: cover;
             background-position: center;
             color: #3a2e20;
-            text-shadow: -1px -1px 0 #f1faee, 1px -1px 0 #f1faee, -1px 1px 0 #f1faee, 1px 1px 0 #f1faee, 2px 2px 2px rgba(0,0,0,0.5);
+            text-shadow: -1px -1px 0 #f1faee, 1px -1px 0 #f1faee, -1px 1px 0 #f1faee, 1px 1px 0 #f1faee, 2px 2px 2px rgba(0, 0, 0, 0.5);
         }
         
         .difficulty-button:hover {
@@ -147,7 +147,7 @@
             border-color: #f1faee;
             transform: scale(1.05);
             color: #f1faee;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         
         #start-game-button {
@@ -169,27 +169,33 @@
         .game-container {
             display: none;
             background-size: cover;
-            background-color: rgba(29, 53, 87, 0.7);
-            border-radius: 200px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background-color: #1d3557;
+            border-radius: 0;
+            box-shadow: none;
             padding: 40px;
             text-align: center;
-            max-width: 5999px;
-            width: 90%;
-            border: 2px solid #457b9d;
+            max-width: 100vw;
+            width: 100vw;
+            border: none;
             position: relative;
             animation: scaleIn 0.8s ease-out;
             flex-direction: column;
             gap: 25px;
-            margin: 20px auto;
+            margin: 0;
             height: 100vh;
             overflow-y: auto;
             transition: background-image 1s ease-in-out;
         }
 
         @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         h1 {
@@ -215,7 +221,7 @@
             background-color: #457b9d;
             padding: 15px 20px;
             border-radius: 15px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
             width: 100%;
             flex-wrap: wrap;
         }
@@ -233,29 +239,101 @@
             font-size: 1.8em;
             color: #a8dadc;
         }
-
-        @keyframes scorePop {
-            0% { transform: scale(1); color: #a8dadc; }
-            50% { transform: scale(1.2); color: #f4d35e; }
-            100% { transform: scale(1); color: #a8dadc; }
+        /* NEW: Styles for the glowing score orb */
+        .score-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1; /* Place it behind the character image */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 200px; /* Adjust size as needed */
+            height: 200px;
         }
 
-        .info-item span.score-animated {
+        .glowing-orb {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(168, 218, 220, 0.8) 0%, rgba(168, 218, 220, 0.4) 50%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+        }
+
+        .orb-text {
+            position: relative;
+            z-index: 1;
+            font-family: 'MedievalSharp', cursive;
+            color: #f1faee;
+            text-shadow: 0 0 5px #a8dadc, 0 0 10px #a8dadc;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .orb-score {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .orb-combo {
+            font-size: 1.5em;
+            color: #f4d35e;
+            font-weight: bold;
+        }
+        @keyframes pulseGlow {
+            from {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            to {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+        /* END NEW */
+
+        @keyframes scorePop {
+            0% {
+                transform: scale(1);
+                color: #a8dadc;
+            }
+            50% {
+                transform: scale(1.2);
+                color: #f4d35e;
+            }
+            100% {
+                transform: scale(1);
+                color: #a8dadc;
+            }
+        }
+        /* The score-animated class now applies to the orb-score element */
+        .orb-score.score-animated {
             animation: scorePop 0.3s ease-out;
         }
 
-        .characters-battle-display {
+        /* UPDATED: z-index is now 1 to ensure it's below the letter-tiles container */
+        #battle-area {
             display: flex;
+            flex-grow: 1;
             justify-content: space-between;
             align-items: flex-end;
-            margin: 0 auto 10px auto;
-            width: 50%;
-            height: 350px;
             position: relative;
-            background: none;
-            border-radius: 15px;
-            padding: 10px;
-            box-sizing: border-box;
+            padding: 0 100px;
+            z-index: 1;
+        }
+        
+        /* NEW: Styles for the big central timer */
+        #timer-display {
+            font-size: 3em;
+            font-family: 'Ludlow Strong Ale', sans-serif;
+            color: #f1faee;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 5px 5px 0 #e63946, 7px 7px 0 #f95738;
+            opacity: 0.8;
+            transition: opacity 0.5s ease-in-out;
+            margin-bottom: 20px;
         }
 
         #character-display {
@@ -264,7 +342,7 @@
             opacity: 0;
             transition: opacity 0.5s ease-out;
             transform: translateY(100px);
-            align-self: flex-end;
+            z-index: 2; /* Ensure character is on top */
         }
 
         #character-display.visible {
@@ -279,13 +357,10 @@
         }
 
         #boss-display {
-            width: 320px;
-            height: 180px;
             opacity: 0;
             transform: translateY(100px);
             transition: opacity 0.5s ease-out;
-            position: relative;
-            align-self: flex-end;
+            z-index: 2; /* Ensure boss is on top */
         }
 
         #boss-display.visible {
@@ -298,6 +373,9 @@
             object-fit: contain;
             filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
             transition: filter 0.5s ease-out;
+            
+            width: auto;
+            height: auto;
         }
         
         .boss-weakened #boss-img {
@@ -310,8 +388,14 @@
         }
 
         @keyframes defeated {
-            0% { opacity: 1; transform: rotate(0deg) scale(1) translateY(0); }
-            100% { opacity: 0; transform: rotate(720deg) scale(0.2) translateY(50px); }
+            0% {
+                opacity: 1;
+                transform: rotate(0deg) scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: rotate(720deg) scale(0.2) translateY(50px);
+            }
         }
 
         #boss-health-bar-container {
@@ -336,13 +420,27 @@
         }
 
         @keyframes attack {
-            0% { transform: translateX(0) scale(1); }
-            30% { transform: translateX(50px) scale(1.1) rotate(2deg); }
-            40% { transform: translateX(80px) scale(1.1) rotate(-2deg); }
-            50% { transform: translateX(100px) scale(1.15) rotate(2deg); }
-            60% { transform: translateX(80px) scale(1.1) rotate(-2deg); }
-            70% { transform: translateX(50px) scale(1.1) rotate(2deg); }
-            100% { transform: translateX(0) scale(1); }
+            0% {
+                transform: translateX(0) scale(1);
+            }
+            30% {
+                transform: translateX(50px) scale(1.1) rotate(2deg);
+            }
+            40% {
+                transform: translateX(80px) scale(1.1) rotate(-2deg);
+            }
+            50% {
+                transform: translateX(100px) scale(1.15) rotate(2deg);
+            }
+            60% {
+                transform: translateX(80px) scale(1.1) rotate(-2deg);
+            }
+            70% {
+                transform: translateX(50px) scale(1.1) rotate(2deg);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+            }
         }
 
         .attack-animation {
@@ -350,45 +448,111 @@
         }
         
         @keyframes character-shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-2deg); }
-            20% { transform: translate(-3px, 0px) rotate(2deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(2deg); }
-            50% { transform: translate(-1px, 2px) rotate(-2deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-2deg); }
-            80% { transform: translate(-1px, -1px) rotate(2deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+            10% {
+                transform: translate(-1px, -2px) rotate(-2deg);
+            }
+            20% {
+                transform: translate(-3px, 0px) rotate(2deg);
+            }
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+            40% {
+                transform: translate(1px, -1px) rotate(2deg);
+            }
+            50% {
+                transform: translate(-1px, 2px) rotate(-2deg);
+            }
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+            70% {
+                transform: translate(3px, 1px) rotate(-2deg);
+            }
+            80% {
+                transform: translate(-1px, -1px) rotate(2deg);
+            }
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
 
         @keyframes boss-shake {
-            0% { transform: translate(2px, 2px) rotate(0deg); }
-            10% { transform: translate(-2px, -3px) rotate(-1deg); }
-            20% { transform: translate(-4px, 0px) rotate(1deg); }
-            30% { transform: translate(4px, 3px) rotate(0deg); }
-            40% { transform: translate(2px, -2px) rotate(1deg); }
-            50% { transform: translate(-2px, 3px) rotate(-1deg); }
-            60% { transform: translate(-4px, 2px) rotate(0deg); }
-            70% { transform: translate(4px, 1px) rotate(-1deg); }
-            80% { transform: translate(-2px, -2px) rotate(1deg); }
-            90% { transform: translate(2px, 3px) rotate(0deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+            0% {
+                transform: translate(2px, 2px) rotate(0deg);
+            }
+            10% {
+                transform: translate(-2px, -3px) rotate(-1deg);
+            }
+            20% {
+                transform: translate(-4px, 0px) rotate(1deg);
+            }
+            30% {
+                transform: translate(4px, 3px) rotate(0deg);
+            }
+            40% {
+                transform: translate(2px, -2px) rotate(1deg);
+            }
+            50% {
+                transform: translate(-2px, 3px) rotate(-1deg);
+            }
+            60% {
+                transform: translate(-4px, 2px) rotate(0deg);
+            }
+            70% {
+                transform: translate(4px, 1px) rotate(-1deg);
+            }
+            80% {
+                transform: translate(-2px, -2px) rotate(1deg);
+            }
+            90% {
+                transform: translate(2px, 3px) rotate(0deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
         
         @keyframes boss-weakened-shake {
-            0% { transform: translate(3px, 3px) rotate(0deg); }
-            10% { transform: translate(-3px, -4px) rotate(-2deg); }
-            20% { transform: translate(-5px, 0px) rotate(2deg); }
-            30% { transform: translate(5px, 4px) rotate(0deg); }
-            40% { transform: translate(3px, -3px) rotate(2deg); }
-            50% { transform: translate(-3px, 4px) rotate(-2deg); }
-            60% { transform: translate(-5px, 3px) rotate(0deg); }
-            70% { transform: translate(5px, 2px) rotate(-2deg); }
-            80% { transform: translate(-3px, -3px) rotate(2deg); }
-            90% { transform: translate(3px, 4px) rotate(0deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+            0% {
+                transform: translate(3px, 3px) rotate(0deg);
+            }
+            10% {
+                transform: translate(-3px, -4px) rotate(-2deg);
+            }
+            20% {
+                transform: translate(-5px, 0px) rotate(2deg);
+            }
+            30% {
+                transform: translate(5px, 4px) rotate(0deg);
+            }
+            40% {
+                transform: translate(3px, -3px) rotate(2deg);
+            }
+            50% {
+                transform: translate(-3px, 4px) rotate(-2deg);
+            }
+            60% {
+                transform: translate(-5px, 3px) rotate(0deg);
+            }
+            70% {
+                transform: translate(5px, 2px) rotate(-2deg);
+            }
+            80% {
+                transform: translate(-3px, -3px) rotate(2deg);
+            }
+            90% {
+                transform: translate(3px, 4px) rotate(0deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
 
         .character-shake-animation {
@@ -401,19 +565,37 @@
 
         /* Updated keyframes for boss roar: only handles scaling */
         @keyframes boss-roar-sequence {
-            0% { transform: scale(1); }
-            10% { transform: scale(1.2); }
-            90% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+            10% {
+                transform: scale(1.2);
+            }
+            90% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* New keyframes for boss shake, one cycle in ~100ms */
         @keyframes boss-shake {
-            0% { transform: translate(4px, 4px) rotate(1deg); }
-            25% { transform: translate(-4px, -4px) rotate(-1deg); }
-            50% { transform: translate(4px, -4px) rotate(1deg); }
-            75% { transform: translate(-4px, 4px) rotate(-1deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+            0% {
+                transform: translate(4px, 4px) rotate(1deg);
+            }
+            25% {
+                transform: translate(-4px, -4px) rotate(-1deg);
+            }
+            50% {
+                transform: translate(4px, -4px) rotate(1deg);
+            }
+            75% {
+                transform: translate(-4px, 4px) rotate(-1deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
 
         #boss-display.roaring {
@@ -454,13 +636,33 @@
         .spark {
             animation: sparkBurst 0.5s ease-out forwards;
         }
+        
+        /* UPDATED: Set z-index to a higher value to be on top of the battle area */
+        #letter-tiles-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            z-index: 2;
+        }
 
         #letter-tiles {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 30px;
+        }
+        
+        /* NEW: Timer styling for the new location */
+        #timer-display {
+            font-size: 3em;
+            font-family: 'Ludlow Strong Ale', sans-serif;
+            color: #f1faee;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 5px 5px 0 #e63946, 7px 7px 0 #f95738;
+            opacity: 0.8;
+            transition: opacity 0.5s ease-in-out;
+            margin-bottom: 20px;
         }
         
         .letter-tile {
@@ -476,15 +678,21 @@
             font-size: 2em;
             font-weight: 700;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px #4e3f30;
             transition: transform 0.2s ease, background-color 0.2s ease;
             text-transform: uppercase;
         }
 
         @keyframes letterTileAppear {
-            from { opacity: 0; transform: scale(0.5) translateY(-20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.5) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .letter-tile.animate-in {
@@ -531,10 +739,6 @@
             outline: none;
         }
 
-        #word-input::placeholder {
-            color: #a8dadc;
-        }
-
         #word-input:focus {
             border-color: #e63946;
             box-shadow: 0 0 12px rgba(230, 57, 70, 0.4);
@@ -560,7 +764,7 @@
             justify-content: center;
             text-align: center;
             color: #3a2e20;
-            text-shadow: -1px -1px 0 #f1faee, 1px -1px 0 #f1faee, -1px 1px 0 #f1faee, 1px 1px 0 #f1faee, 2px 2px 2px rgba(0,0,0,0.5);
+            text-shadow: -1px -1px 0 #f1faee, 1px -1px 0 #f1faee, -1px 1px 0 #f1faee, 1px 1px 0 #f1faee, 2px 2px 2px rgba(0, 0, 0, 0.5);
             line-height: 1.2;
         }
 
@@ -592,7 +796,8 @@
             margin-top: 20px;
         }
 
-        #hint-button, #special-ability-button {
+        #hint-button,
+        #special-ability-button {
             font-size: 1.4em;
             padding: 10px 20px;
             border: 2px solid #4a3b2a;
@@ -601,7 +806,8 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         
-        #hint-button[disabled], #special-ability-button[disabled] {
+        #hint-button[disabled],
+        #special-ability-button[disabled] {
             opacity: 0.5;
             cursor: not-allowed;
         }
@@ -620,7 +826,7 @@
             padding: 20px;
             flex: 1;
             min-height: 150px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .word-list-column h3 {
@@ -657,25 +863,39 @@
             font-weight: 600;
             min-height: 1.5em;
             color: #f1faee;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
             opacity: 0;
         }
 
         @keyframes messageFlash {
-            0% { opacity: 0; transform: translateY(-10px); }
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(10px); }
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            80% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
         }
 
         .message-success {
             color: #2a9d8f;
             animation: messageFlash 2s ease-out forwards;
         }
+
         .message-error {
             color: #e63946;
             animation: messageFlash 2s ease-out forwards;
         }
+
         .message-info {
             color: #a8dadc;
             animation: messageFlash 2s ease-out forwards;
@@ -709,8 +929,12 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .confetti-container {
@@ -734,14 +958,28 @@
             animation: confettiFall 3s forwards;
         }
 
-        .confetti:nth-child(2n) { background-color: #ee964b; }
-        .confetti:nth-child(3n) { background-color: #f95738; }
-        .confetti:nth-child(4n) { background-color: #2a9d8f; }
-        .confetti:nth-child(5n) { background-color: #a8dadc; }
+        .confetti:nth-child(2n) {
+            background-color: #ee964b;
+        }
+        .confetti:nth-child(3n) {
+            background-color: #f95738;
+        }
+        .confetti:nth-child(4n) {
+            background-color: #2a9d8f;
+        }
+        .confetti:nth-child(5n) {
+            background-color: #a8dadc;
+        }
 
         @keyframes confettiFall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
@@ -781,15 +1019,18 @@
             .word-list-column {
                 min-height: 100px;
             }
-            .characters-battle-display {
-                height: 200px;
+            .word-list-column h3 {
+                font-size: 1.2em;
+            }
+            .word-list-column li {
+                font-size: 1em;
+            }
+            /* Adjusted for new battle area */
+            #battle-area {
+                padding: 0 20px;
             }
             #character-display {
                 width: 100px;
-                height: 100px;
-            }
-            #boss-display {
-                width: 180px;
                 height: 100px;
             }
             #boss-display img {
@@ -797,41 +1038,37 @@
                 max-height: 100%;
             }
             @keyframes attack {
-                0% { transform: translateX(0) scale(1); }
-                30% { transform: translateX(25px) scale(1.1) rotate(2deg); }
-                40% { transform: translateX(40px) scale(1.1) rotate(-2deg); }
-                50% { transform: translateX(50px) scale(1.15) rotate(2deg); }
-                60% { transform: translateX(40px) scale(1.1) rotate(-2deg); }
-                70% { transform: translateX(25px) scale(1.1) rotate(2deg); }
-                100% { transform: translateX(0) scale(1); }
+                0% {
+                    transform: translateX(0) scale(1);
+                }
+                30% {
+                    transform: translateX(25px) scale(1.1) rotate(2deg);
+                }
+                40% {
+                    transform: translateX(40px) scale(1.1) rotate(-2deg);
+                }
+                50% {
+                    transform: translateX(50px) scale(1.15) rotate(2deg);
+                }
+                60% {
+                    transform: translateX(40px) scale(1.1) rotate(-2deg);
+                }
+                70% {
+                    transform: translateX(25px) scale(1.1) rotate(2deg);
+                }
+                100% {
+                    transform: translateX(0) scale(1);
+                }
             }
             .spark {
                 width: 6px;
                 height: 6px;
             }
             @keyframes defeated {
-                0% { opacity: 1; transform: rotate(0deg) scale(1) translateY(0); }
-                100% { opacity: 0; transform: rotate(720deg) scale(0.2) translateY(30px); }
-            }
-        }
-
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            .letter-tile {
-                width: 40px;
-                height: 40px;
-                font-size: 1.8em;
-            }
-            .word-list-column h3 {
-                font-size: 1.2em;
-            }
-            .word-list-column li {
-                font-size: 1em;
+                0% {
+                    opacity: 1;
+                    transform: rotate(0deg) scale(1) translateY(0);
+                }
             }
         }
     </style>
@@ -878,15 +1115,19 @@
         <div class="game-header">
             <h1>Mythic Runes</h1>
             <div class="game-info">
-                <div class="info-item">Score: <span id="score">0</span></div>
-                <div class="info-item">Time Left: <span id="timer">0:00</span></div>
-                <div class="info-item">Combo: <span id="combo-display">x1</span></div>
                 <div class="info-item">Level: <span id="level-display">1</span></div>
             </div>
         </div>
 
-        <div class="characters-battle-display">
+        <div id="battle-area">
             <div id="character-display">
+                <div class="score-overlay">
+                    <div class="glowing-orb"></div>
+                    <div class="orb-text">
+                        <div class="orb-score">Score: <span id="score">0</span></div>
+                        <div class="orb-combo">Combo: <span id="combo-display">x1</span></div>
+                    </div>
+                </div>
                 <img id="chosen-character-img" src="" alt="Chosen Character">
             </div>
             <div id="boss-display">
@@ -899,7 +1140,13 @@
 
         <div id="confetti-container" class="confetti-container"></div>
 
-        <div id="letter-tiles"></div>
+        <!-- UPDATED: New container for the timer and letters -->
+        <div id="letter-tiles-container">
+            <div id="timer-display">
+                <span id="timer">0:00</span>
+            </div>
+            <div id="letter-tiles"></div>
+        </div>
 
         <div class="input-area">
             <input type="text" id="word-input" placeholder="Type your word here" aria-label="Enter your word">
@@ -951,73 +1198,42 @@
         let currentBossIndex = 0;
         let scoreSinceLastBoss = 0;
 
-// Boss configuration
-const BOSSES = [
-    { name: 'Draugr', image: 'draugr.png', sound: 'draugr.wav', background: 'draugr-bg.png', pointsToDefeat: 20, level: 1, soundDuration: 4000, roarDuration: 1000, shakeDuration: 1500, width: 320, height: 180, volume: 0.2 },
-    { name: 'Dark Elf: Kethryll', image: 'darkelf.png', sound: 'darkelf.wav', background: 'darkelf-bg.png', pointsToDefeat: 15, level: 2, soundDuration: 15020, roarDuration: 800, shakeDuration: 1500, width: 280, height: 160, volume: 0.5 },
-    { name: 'Dark Elf: Völund', image: 'darkelf2.png', sound: 'darkelf2.wav', background: 'darkelf-bg.png', pointsToDefeat: 15, level: 2, soundDuration: 1000, roarDuration: 5000, shakeDuration: 1100, width: 300, height: 170, volume: 0.5 },
-    { name: 'Fossegrim', image: 'Fossegrim.png', sound: 'fossegrim.wav', background: 'fossegrim-bg.png', pointsToDefeat: 35, level: 3, soundDuration: 9100, roarDuration: 20000, shakeDuration: 1000, width: 340, height: 190, volume: 0.3 },
-    { name: 'Mokkurkalfi', image: 'mokkurkalfi.png', sound: 'mokkurkalfi.wav', background: 'mokkurkalfi-bg.png', pointsToDefeat: 30, level: 4, soundDuration: 6000, roarDuration: 30000, shakeDuration: 1500, width: 350, height: 200, volume: 0.4 },
-    { name: 'Fenrir', image: 'Fenrir.png', sound: 'howling.wav', background: 'fenrir-bg.png', pointsToDefeat: 40, level: 5, soundDuration: 500, roarDuration: 45000, shakeDuration: 1200, width: 360, height: 200, volume: 0.5 },
-    { name: 'Kraken', image: 'kraken.png', sound: 'kraken.wav', background: 'kraken-bg.png', pointsToDefeat: 45, level: 6, soundDuration: 3000, roarDuration: 30000, shakeDuration: 3800, width: 380, height: 220, volume: 0.5 },
-    { name: 'Fafnir', image: 'fafnir.png', sound: 'fafnir.wav', background: 'fafnir-bg.png', pointsToDefeat: 50, level: 7, soundDuration: 33000, roarDuration: 1200, shakeDuration: 2000, width: 380, height: 220, volume: 0.5 },
-    { name: 'Jörmungandr', image: 'jörmungandr.png', sound: 'jormungandr.wav', background: 'jormungandr-bg.png', pointsToDefeat: 60, level: 8, soundDuration: 2000, roarDuration: 7000, shakeDuration: 6500, width: 400, height: 240, volume: 0.5 },
-];
-
-function updateBossDisplay() {
-    const currentBoss = BOSSES[currentBossIndex];
-    bossImg.src = currentBoss.image;
-    bossImg.alt = currentBoss.name;
-    bossDisplay.classList.remove('visible', 'boss-defeated', 'boss-weakened', 'roaring', 'shaking');
-    
-    // Set dynamic width and height for the boss display
-    bossDisplay.style.width = `${currentBoss.width}px`;
-    bossDisplay.style.height = `${currentBoss.height}px`;
-    
-    // Update the boss entrance sound
-    bossEntranceSound.src = currentBoss.sound;
-    bossEntranceSound.currentTime = 0;
-
-    // Update the background image
-    gameContainer.style.backgroundImage = `url('${currentBoss.background}')`;
-
-    // Set dynamic transition duration for opacity based on sound duration
-    bossDisplay.style.transition = `opacity 0.5s ease-out`;
-
-    // Start sound and opacity transition immediately
-    bossEntranceSound.play().catch(e => console.error(`Error playing ${currentBoss.sound}:`, e));
-    bossDisplay.classList.add('visible');
-
-    // Trigger roaring and shaking animations
-    const roarDelay = currentBoss.soundDuration * 0.2; // Start roar at 20% of sound duration
-    setTimeout(() => {
-        // Apply roar animation (scaling)
-        bossDisplay.style.animationDuration = `${currentBoss.roarDuration / 1000}s`;
-        bossDisplay.classList.add('roaring');
-        // Apply shake animation after scaling phase (10% of roarDuration)
-        const shakeDelay = currentBoss.roarDuration * 0.1;
-        setTimeout(() => {
-            const shakeCycleDuration = 100; // One shake cycle in 100ms
-            const iterationCount = Math.max(1, Math.round(currentBoss.shakeDuration / shakeCycleDuration));
-            bossDisplay.style.animation = `boss-shake ${shakeCycleDuration / 1000}s ease-in-out ${iterationCount}`;
-            bossDisplay.classList.add('shaking');
-            setTimeout(() => {
-                bossDisplay.classList.remove('shaking');
-                bossDisplay.style.animation = ''; // Clear shake animation
-            }, currentBoss.shakeDuration);
-        }, shakeDelay);
-        setTimeout(() => {
-            bossDisplay.classList.remove('roaring');
-            bossDisplay.style.animationDuration = ''; // Clear roar animation
-        }, currentBoss.roarDuration);
-    }, roarDelay);
-}
+        // Boss configuration
+        const BOSSES = [
+            { name: 'Draugr', image: 'draugr.png', sound: 'draugr.wav', background: 'draugr-bg.png', pointsToDefeat: 20, level: 1, soundDuration: 4000, roarDuration: 1000, shakeDuration: 1500, width: 320, height: 180, volume: 0.2 },
+            { name: 'Dark Elf: Kethryll', image: 'darkelf.png', sound: 'darkelf.wav', background: 'darkelf-bg.png', pointsToDefeat: 15, level: 2, soundDuration: 15020, roarDuration: 800, shakeDuration: 1500, width: 280, height: 160, volume: 0.5 },
+            { name: 'Dark Elf: Völund', image: 'darkelf2.png', sound: 'darkelf2.wav', background: 'darkelf-bg.png', pointsToDefeat: 15, level: 2, soundDuration: 1000, roarDuration: 5000, shakeDuration: 1100, width: 300, height: 170, volume: 0.5 },
+            { name: 'Fossegrim', image: 'Fossegrim.png', sound: 'fossegrim.wav', background: 'fossegrim-bg.png', pointsToDefeat: 35, level: 3, soundDuration: 9100, roarDuration: 20000, shakeDuration: 1000, width: 340, height: 190, volume: 0.3 },
+            { name: 'Mokkurkalfi', image: 'mokkurkalfi.png', sound: 'mokkurkalfi.wav', background: 'mokkurkalfi-bg.png', pointsToDefeat: 30, level: 4, soundDuration: 6000, roarDuration: 30000, shakeDuration: 1500, width: 1000, height: 600, volume: 0.4 },
+            { name: 'Fenrir', image: 'Fenrir.png', sound: 'howling.wav', background: 'fenrir-bg.png', pointsToDefeat: 40, level: 5, soundDuration: 500, roarDuration: 45000, shakeDuration: 1200, width: 600, height: 300, volume: 0.5 },
+            { name: 'Kraken', image: 'kraken.png', sound: 'kraken.wav', background: 'kraken-bg.png', pointsToDefeat: 45, level: 6, soundDuration: 3000, roarDuration: 30000, shakeDuration: 3800, width: 1000, height: 700, volume: 0.5 },
+            { name: 'Fafnir', image: 'fafnir.png', sound: 'fafnir.wav', background: 'fafnir-bg.png', pointsToDefeat: 50, level: 7, soundDuration: 33000, roarDuration: 1200, shakeDuration: 2000, width: 1000, height: 700, volume: 0.5 },
+            { name: 'Jörmungandr', image: 'jörmungandr.png', sound: 'jormungandr.wav', background: 'jormungandr-bg.png', pointsToDefeat: 60, level: 8, soundDuration: 2000, roarDuration: 7000, shakeDuration: 6500, width: 1000, height: 1000, volume: 0.5 },
+        ];
 
         // Configuration for different difficulty levels
         const DIFFICULTY_SETTINGS = {
-            easy: { numLetters: 12, numVowels: 5, time: Infinity, berserkCost: 0, divineHints: 3 },
-            medium: { numLetters: 10, numVowels: 4, time: 120, berserkCost: 5, divineHints: 2 },
-            hard: { numLetters: 8, numVowels: 3, time: 90, berserkCost: 10, divineHints: 1 }
+            easy: {
+                numLetters: 12,
+                numVowels: 5,
+                time: Infinity,
+                berserkCost: 0,
+                divineHints: 3
+            },
+            medium: {
+                numLetters: 10,
+                numVowels: 4,
+                time: 120,
+                berserkCost: 5,
+                divineHints: 2
+            },
+            hard: {
+                numLetters: 8,
+                numVowels: 3,
+                time: 90,
+                berserkCost: 10,
+                divineHints: 1
+            }
         };
         let currentDifficulty = 'medium';
         let settings = DIFFICULTY_SETTINGS[currentDifficulty];
@@ -1074,6 +1290,7 @@ function updateBossDisplay() {
             return count;
         }
 
+        /* --- MODIFIED: Moved outside of startGame for global access --- */
         function generateLetters() {
             let letters;
             let attempts = 0;
@@ -1143,7 +1360,10 @@ function updateBossDisplay() {
         const wordInputElement = document.getElementById('word-input');
         const submitWordButton = document.getElementById('submit-word-button');
         const newGameButton = document.getElementById('new-game-button');
+        // UPDATED: Re-mapped score and combo elements to new orb container
         const scoreElement = document.getElementById('score');
+        const comboDisplayElement = document.getElementById('combo-display');
+        // END UPDATED
         const timerElement = document.getElementById('timer');
         const messageElement = document.getElementById('message');
         const foundWordsList = document.getElementById('found-words-list');
@@ -1158,14 +1378,13 @@ function updateBossDisplay() {
         const shuffleLettersButton = document.getElementById('shuffle-letters-button');
         const bossDisplay = document.getElementById('boss-display');
         const bossImg = document.getElementById('boss-img');
-        const charactersBattleDisplay = document.querySelector('.characters-battle-display');
+        const battleArea = document.getElementById('battle-area');
         const easyButton = document.getElementById('easy-button');
         const mediumButton = document.getElementById('medium-button');
         const hardButton = document.getElementById('hard-button');
         const hintButton = document.getElementById('hint-button');
         const specialAbilityButton = document.getElementById('special-ability-button');
         const bossHealthBar = document.getElementById('boss-health-bar');
-        const comboDisplayElement = document.getElementById('combo-display');
         const levelDisplayElement = document.getElementById('level-display');
         const bossEntranceSound = document.getElementById('boss-entrance-sound');
 
@@ -1182,8 +1401,8 @@ function updateBossDisplay() {
                 }
                 const text = await response.text();
                 const wordsArray = text.split('\n')
-                                        .map(word => word.trim().toLowerCase())
-                                        .filter(word => word.length > 1);
+                    .map(word => word.trim().toLowerCase())
+                    .filter(word => word.length > 1);
                 dictionary = new Set(wordsArray);
                 console.log(`Dictionary loaded successfully: ${dictionary.size} words.`);
                 loadingOverlay.style.display = 'none';
@@ -1322,7 +1541,7 @@ function updateBossDisplay() {
             } else {
                 hintButton.style.display = 'block';
                 hintButton.disabled = false;
-                hintButton.textContent = `Hint${currentDifficulty === 'medium' ? ' (-5)' : ''}`;
+                hintButton.textContent = `Hint${currentDifficulty === 'medium' ? ' (-5 points)' : ''}`;
             }
 
             specialAbilityButton.style.display = 'block';
@@ -1359,9 +1578,8 @@ function updateBossDisplay() {
             bossImg.alt = currentBoss.name;
             bossDisplay.classList.remove('visible', 'boss-defeated', 'boss-weakened', 'roaring', 'shaking');
             
-            // Set dynamic width and height for the boss display
-            bossDisplay.style.width = `${currentBoss.width}px`;
-            bossDisplay.style.height = `${currentBoss.height}px`;
+            bossImg.style.width = `${currentBoss.width}px`;
+            bossImg.style.height = `${currentBoss.height}px`;
             
             // Update the boss entrance sound with volume
             bossEntranceSound.src = currentBoss.sound;
@@ -1413,42 +1631,42 @@ function updateBossDisplay() {
             }, 1000);
         }
 
-function updateDisplay() {
-    const oldScore = parseInt(scoreElement.textContent);
-    if (score > oldScore) {
-        scoreElement.classList.remove('score-animated');
-        void scoreElement.offsetWidth;
-        scoreElement.classList.add('score-animated');
-    }
-    scoreElement.textContent = score;
-    // Handle infinite time display with safety check
-    if (typeof timeLeft === 'number' && timeLeft === Infinity) {
-        timerElement.textContent = "No Limit";
-    } else {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
-    foundWordsCountElement.textContent = foundWords.size;
-    comboDisplayElement.textContent = `x${comboMultiplier}`;
-    levelDisplayElement.textContent = currentLevel;
+        function updateDisplay() {
+            const oldScore = parseInt(scoreElement.textContent);
+            if (score > oldScore) {
+                scoreElement.classList.remove('score-animated');
+                void scoreElement.offsetWidth;
+                scoreElement.classList.add('score-animated');
+            }
+            scoreElement.textContent = score;
+            // Handle infinite time display with safety check
+            if (typeof timeLeft === 'number' && timeLeft === Infinity) {
+                timerElement.textContent = "No Limit";
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }
+            foundWordsCountElement.textContent = foundWords.size;
+            comboDisplayElement.textContent = `x${comboMultiplier}`;
+            levelDisplayElement.textContent = currentLevel;
 
-    const currentBoss = BOSSES[currentBossIndex];
-    const bossHealth = Math.max(0, 100 - (scoreSinceLastBoss / currentBoss.pointsToDefeat) * 100);
-    bossHealthBar.style.width = `${bossHealth}%`;
+            const currentBoss = BOSSES[currentBossIndex];
+            const bossHealth = Math.max(0, 100 - (scoreSinceLastBoss / currentBoss.pointsToDefeat) * 100);
+            bossHealthBar.style.width = `${bossHealth}%`;
 
-    if (scoreSinceLastBoss >= currentBoss.pointsToDefeat && !bossDisplay.classList.contains('boss-defeated')) {
-        bossDisplay.classList.remove('boss-weakened');
-        bossDisplay.classList.add('boss-defeated');
-        animateBossDefeat();
-        showMessage(`You Felled the ${currentBoss.name}!`, 'success');
-        setTimeout(() => advanceToNextBoss(), 1500);
-    } else if (scoreSinceLastBoss >= currentBoss.pointsToDefeat / 2 && !bossDisplay.classList.contains('boss-defeated')) {
-        bossDisplay.classList.add('boss-weakened');
-    } else if (scoreSinceLastBoss < currentBoss.pointsToDefeat / 2) {
-        bossDisplay.classList.remove('boss-weakened');
-    }
-}        
+            if (scoreSinceLastBoss >= currentBoss.pointsToDefeat && !bossDisplay.classList.contains('boss-defeated')) {
+                bossDisplay.classList.remove('boss-weakened');
+                bossDisplay.classList.add('boss-defeated');
+                animateBossDefeat();
+                showMessage(`You Felled the ${currentBoss.name}!`, 'success');
+                setTimeout(() => advanceToNextBoss(), 1500);
+            } else if (scoreSinceLastBoss >= currentBoss.pointsToDefeat / 2 && !bossDisplay.classList.contains('boss-defeated')) {
+                bossDisplay.classList.add('boss-weakened');
+            } else if (scoreSinceLastBoss < currentBoss.pointsToDefeat / 2) {
+                bossDisplay.classList.remove('boss-weakened');
+            }
+        }
 
         function advanceToNextBoss() {
             currentBossIndex++;
@@ -1498,8 +1716,9 @@ function updateDisplay() {
                 for (let i = 0; i < numSparks; i++) {
                     const spark = document.createElement('div');
                     spark.classList.add('spark', selectedCharacter);
-                    spark.style.right = '160px';
-                    spark.style.bottom = '100px';
+                    /* UPDATED: Spark positioning is now relative to the battle area */
+                    spark.style.left = `calc(50% + ${Math.random() * 80 - 40}px)`;
+                    spark.style.bottom = `50px`; /* Adjusted for new container */
                     const dx = (Math.random() - 0.5) * 100;
                     const dy = (Math.random() - 0.5) * 100;
                     const rotate = Math.random() * 360;
@@ -1509,7 +1728,7 @@ function updateDisplay() {
                     const size = 6 + Math.random() * 4;
                     spark.style.width = `${size}px`;
                     spark.style.height = `${size}px`;
-                    charactersBattleDisplay.appendChild(spark);
+                    battleArea.appendChild(spark); /* UPDATED: Changed parent to battleArea */
                 }
                 setTimeout(() => {
                     document.querySelectorAll('.spark').forEach(spark => spark.remove());
@@ -1530,8 +1749,9 @@ function updateDisplay() {
             for (let i = 0; i < numSparks; i++) {
                 const spark = document.createElement('div');
                 spark.classList.add('spark', 'defeat-spark');
-                spark.style.right = '150px';
-                spark.style.bottom = '150px';
+                /* UPDATED: Spark positioning is now relative to the battle area */
+                spark.style.left = `calc(50% + ${Math.random() * 80 - 40}px)`;
+                spark.style.bottom = `50px`; /* Adjusted for new container */
                 const dx = (Math.random() - 0.5) * 120;
                 const dy = (Math.random() - 0.5) * 120;
                 const rotate = Math.random() * 360;
@@ -1541,7 +1761,7 @@ function updateDisplay() {
                 const size = 6 + Math.random() * 4;
                 spark.style.width = `${size}px`;
                 spark.style.height = `${size}px`;
-                charactersBattleDisplay.appendChild(spark);
+                battleArea.appendChild(spark); /* UPDATED: Changed parent to battleArea */
             }
             setTimeout(() => document.querySelectorAll('.spark.defeat-spark').forEach(spark => spark.remove()), 500);
         }
@@ -1643,8 +1863,7 @@ function updateDisplay() {
             if (word.length < 2) {
                 showMessage('Words must be at least 2 letters long.', 'error');
                 comboCount = 0;
-                comboMultiplier = 1;
-                updateDisplay();
+                updateComboMultiplier();
                 addInvalidWord(word);
                 return;
             }
@@ -1652,23 +1871,21 @@ function updateDisplay() {
             if (foundWords.has(word) || invalidWords.has(word)) {
                 showMessage(`You already tried "${word.toUpperCase()}".`, 'info');
                 comboCount = 0;
-                comboMultiplier = 1;
-                updateDisplay();
+                updateComboMultiplier();
                 return;
             }
 
             if (!canFormWord(word, currentLetters)) {
                 showMessage(`"${word.toUpperCase()}" cannot be formed from the given letters.`, 'error');
                 comboCount = 0;
-                comboMultiplier = 1;
-                updateDisplay();
+                updateComboMultiplier();
                 addInvalidWord(word);
                 return;
             }
 
             if (dictionary.has(word)) {
                 comboCount++;
-                comboMultiplier = comboCount >= 3 ? 1.5 : 1;
+                updateComboMultiplier(); // <-- Call the new function
                 const wordScore = calculateWordScore(word);
                 const finalScore = Math.round(wordScore * comboMultiplier);
                 score += finalScore;
@@ -1688,9 +1905,21 @@ function updateDisplay() {
             } else {
                 showMessage(`"${word.toUpperCase()}" is not in the dictionary.`, 'error');
                 comboCount = 0;
-                comboMultiplier = 1;
-                updateDisplay();
+                updateComboMultiplier();
                 addInvalidWord(word);
+            }
+        }
+        
+        // --- NEW FUNCTION: Updates the combo multiplier based on comboCount tiers ---
+        function updateComboMultiplier() {
+            if (comboCount >= 50) {
+                comboMultiplier = 5;
+            } else if (comboCount >= 20) {
+                comboMultiplier = 3;
+            } else if (comboCount >= 10) {
+                comboMultiplier = 2;
+            } else {
+                comboMultiplier = 1;
             }
         }
 
@@ -1784,49 +2013,49 @@ function updateDisplay() {
             }
         }
 
-// --- Event Listeners ---
-vikingCard.addEventListener('click', () => selectCharacter('viking'));
-valkyrieCard.addEventListener('click', () => selectCharacter('valkyrie'));
-startGameButton.addEventListener('click', loadDictionary);
+        // --- Event Listeners ---
+        vikingCard.addEventListener('click', () => selectCharacter('viking'));
+        valkyrieCard.addEventListener('click', () => selectCharacter('valkyrie'));
+        startGameButton.addEventListener('click', loadDictionary);
 
-easyButton.addEventListener('click', () => setDifficulty('easy'));
-mediumButton.addEventListener('click', () => setDifficulty('medium'));
-hardButton.addEventListener('click', () => setDifficulty('hard'));
+        easyButton.addEventListener('click', () => setDifficulty('easy'));
+        mediumButton.addEventListener('click', () => setDifficulty('medium'));
+        hardButton.addEventListener('click', () => setDifficulty('hard'));
 
-submitWordButton.addEventListener('click', handleSubmitWord);
-shuffleLettersButton.addEventListener('click', shuffleLetters);
-hintButton.addEventListener('click', provideHint);
-specialAbilityButton.addEventListener('click', handleSpecialAbility);
+        submitWordButton.addEventListener('click', handleSubmitWord);
+        shuffleLettersButton.addEventListener('click', shuffleLetters);
+        hintButton.addEventListener('click', provideHint);
+        specialAbilityButton.addEventListener('click', handleSpecialAbility);
 
-wordInputElement.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        handleSubmitWord();
-    }
-});
+        wordInputElement.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                handleSubmitWord();
+            }
+        });
 
-// New event listener for Shift key to shuffle letters
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'Shift' && gameActive && document.activeElement !== wordInputElement) {
-        shuffleLetters();
-    }
-});
+        // New event listener for Shift key to shuffle letters
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Shift' && gameActive && document.activeElement !== wordInputElement) {
+                shuffleLetters();
+            }
+        });
 
-newGameButton.addEventListener('click', showTitleScreen);
+        newGameButton.addEventListener('click', showTitleScreen);
 
-window.onload = () => {
-    showTitleScreen();
-    setDifficulty('medium');
+        window.onload = () => {
+            showTitleScreen();
+            setDifficulty('medium');
 
-    // --- NEW CODE: Populate Boss Dropdown for Devs ---
-    const bossSelect = document.getElementById('boss-select');
-    BOSSES.forEach((boss, index) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = `Lvl ${boss.level}: ${boss.name}`;
-        bossSelect.appendChild(option);
-    });
-    // --- END NEW CODE ---
-}
+            // --- NEW` CODE: Populate Boss Dropdown for Devs ---
+            const bossSelect = document.getElementById('boss-select');
+            BOSSES.forEach((boss, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Lvl ${boss.level}: ${boss.name}`;
+                bossSelect.appendChild(option);
+            });
+            // --- END NEW CODE ---
+        }
     </script>
 </body>
 </html>
